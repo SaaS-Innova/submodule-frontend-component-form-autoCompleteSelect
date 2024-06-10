@@ -7,15 +7,11 @@ export interface IAutoCompleteSelectTableColumn {
 }
 
 export interface IAutoCompleteSelectDropDownOption {
-  label: string;
-  value: string;
-  items?: [
-    {
-      extra_label?: string;
-      label: string;
-      value: string;
-    }
-  ];
+  label: string | any;
+  value?: string | number;
+  code?: string | number;
+  items?: IAutoCompleteSelectDropDownOption[];
+  extra_label?: string;
 }
 
 export interface IAutoCompleteSelectCommonConfig {
