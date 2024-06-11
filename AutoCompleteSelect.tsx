@@ -25,13 +25,11 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     attribute,
     form,
     column,
-    placeholder,
     optionGroupTemplate,
     optionGroupLabel,
     optionGroupChildren,
     forceSelection,
-    options,
-    data
+    data,
   } = (props && props.config) || {};
   const {
     dialog,
@@ -41,7 +39,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     appendTo = "self",
     fieldType,
   } = props || {};
-  const { label } = (form && form[attribute as string]) || {};
+  const { label, options, placeholder } =
+    (form && form[attribute as string]) || {};
   const { required, disabled } =
     (form && form[attribute as string].rules) || {};
   const [suggestionsList, setSuggestionsList] = useState<any>(null);
@@ -74,7 +73,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
 
   const itemTemplate = (item: IOptions) => {
     if (viewAs === AUTO_COMPLETE_SELECT_COMMON_TYPE.TABLE) {
-      const finalData = Array.isArray(data) ? data.find((data: any) => data.id === item.value) : null;
+      const finalData = Array.isArray(data)
+        ? data.find((data: any) => data.id === item.value)
+        : null;
       return (
         <div>
           {item.label === "Handle" ? (
