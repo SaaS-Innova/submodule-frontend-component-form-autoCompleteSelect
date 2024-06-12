@@ -197,7 +197,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       default:
         labelClassName = "col-12 mb-3 md:col-3 md:mb-0";
         fieldClassName = "field grid custom-item-table";
-        divClassName = "col-12 md:col-9 relative flex";
+        divClassName = "col-12 md:col-9 relative";
         break;
     }
 
@@ -214,60 +214,62 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
       <div className={divClassName}>
-        <Controller
-          name={attribute as string}
-          control={control}
-          rules={inputValidator(
-            form?.[attribute as string]?.rules ?? {},
-            label as string
-          )}
-          render={({ field }) => (
-            <AutoComplete
-              dropdown
-              dropdownMode={dropdownModeOption}
-              id={attribute}
-              {...field}
-              field={attribute}
-              suggestions={suggestionsList}
-              value={selected || findObjectById(field.value)}
-              completeMethod={filteredList || searchList}
-              optionGroupLabel={optionGroupLabel}
-              optionGroupChildren={optionGroupChildren}
-              onChange={(e) => {
-                const isHandle =
-                  e.value?.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL;
-                const isNoMoreRecord =
-                  e.value?.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL;
-                if (isHandle || isNoMoreRecord) {
-                  setSelected(null);
-                  field.onChange(null);
-                } else {
-                  setSelected(e.value);
-                  field.onChange(e.value ? e.value.value : null);
-                }
-              }}
-              onSelect={(e) => field.onChange(e.value.value)}
-              forceSelection={forceSelection}
-              itemTemplate={itemTemplate}
-              selectedItemTemplate={selectedItemTemplate}
-              placeholder={placeholder || defaultPlaceHolder}
-              optionGroupTemplate={optionGroupTemplate}
-              className={`w-full ${
-                errors && errors[attribute as string] ? "p-invalid" : ""
-              }`}
-              appendTo={appendTo}
-              disabled={disabled}
+        <div className="flex">
+          <Controller
+            name={attribute as string}
+            control={control}
+            rules={inputValidator(
+              form?.[attribute as string]?.rules ?? {},
+              label as string
+            )}
+            render={({ field }) => (
+              <AutoComplete
+                dropdown
+                dropdownMode={dropdownModeOption}
+                id={attribute}
+                {...field}
+                field={attribute}
+                suggestions={suggestionsList}
+                value={selected || findObjectById(field.value)}
+                completeMethod={filteredList || searchList}
+                optionGroupLabel={optionGroupLabel}
+                optionGroupChildren={optionGroupChildren}
+                onChange={(e) => {
+                  const isHandle =
+                    e.value?.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL;
+                  const isNoMoreRecord =
+                    e.value?.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL;
+                  if (isHandle || isNoMoreRecord) {
+                    setSelected(null);
+                    field.onChange(null);
+                  } else {
+                    setSelected(e.value);
+                    field.onChange(e.value ? e.value.value : null);
+                  }
+                }}
+                onSelect={(e) => field.onChange(e.value.value)}
+                forceSelection={forceSelection}
+                itemTemplate={itemTemplate}
+                selectedItemTemplate={selectedItemTemplate}
+                placeholder={placeholder || defaultPlaceHolder}
+                optionGroupTemplate={optionGroupTemplate}
+                className={`w-full ${
+                  errors && errors[attribute as string] ? "p-invalid" : ""
+                }`}
+                appendTo={appendTo}
+                disabled={disabled}
+              />
+            )}
+          />
+          {isLoadMore && handleOnLoad && (
+            <AppButton
+              type={BUTTON_TYPE.MORE_LOAD}
+              onClick={handleOnLoad}
+              className="ml-2"
             />
           )}
-        />
+        </div>
         <FormFieldError data={{ errors: errors, name: attribute as string }} />
-        {isLoadMore && handleOnLoad && (
-          <AppButton
-            type={BUTTON_TYPE.MORE_LOAD}
-            onClick={handleOnLoad}
-            className="ml-2"
-          />
-        )}
       </div>
     </div>
   );
