@@ -170,6 +170,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
 
   const findObjectById = (id: any) => {
     if (
+      !id ||
       DEFAULT_LABEL_VALUE.HANDLE_VALUE === id ||
       DEFAULT_LABEL_VALUE.NO_MORE_RECORD_VALUE === id
     )
