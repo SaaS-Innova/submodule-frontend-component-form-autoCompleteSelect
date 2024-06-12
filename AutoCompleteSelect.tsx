@@ -21,6 +21,7 @@ import { fuseFilter } from "./AutoComplete.filter";
 import { IOptions } from "../formInterface/forms.model";
 import { FormFieldError } from "../formFieldError/FormFieldError";
 import { useTranslation } from "react-i18next";
+import _ from "lodash";
 
 export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   const {
