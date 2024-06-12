@@ -5,9 +5,10 @@ import {
   inputValidator,
 } from "../../../../library/utilities/helperFunction";
 import { useEffect, useRef, useState } from "react";
-import _ from "lodash";
 import {
   AUTO_COMPLETE_SELECT_COMMON_TYPE,
+  BUTTON_TYPE,
+  DEFAULT_LABEL_VALUE,
   IFormFieldType,
   SEARCH_MODE,
 } from "../../../../library/utilities/constant";
@@ -16,9 +17,10 @@ import {
   IAutoCompleteSelectTableColumn,
 } from "./AutoCompleteSelect.model";
 import AppButton from "../../button/AppButton";
-import { fuseFilter } from "../formInterface/formHelper";
+import { fuseFilter } from "./AutoComplete.filter";
 import { IOptions } from "../formInterface/forms.model";
 import { FormFieldError } from "../formFieldError/FormFieldError";
+import { useTranslation } from "react-i18next";
 
 export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   const {
@@ -31,6 +33,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     forceSelection,
     data,
   } = (props && props.config) || {};
+  const { t } = useTranslation();
   const {
     dialog,
     viewAs = AUTO_COMPLETE_SELECT_COMMON_TYPE.DROPDOWN,
@@ -38,7 +41,14 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     searchMode = SEARCH_MODE.EXACT,
     appendTo = "self",
     fieldType,
+    LoadMore,
   } = props || {};
+  const {
+    handleOnLoad,
+    isLoadMore,
+    isNoRecordBtn,
+    dropdownModeOption = "blank",
+  } = LoadMore || {};
   const { label, options, placeholder } =
     (form && form[attribute as string]) || {};
   const { required, disabled } =
@@ -78,7 +88,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         : null;
       return (
         <div>
-          {item.label === "Handle" ? (
+          {item.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL ? (
             <>
               <div
                 className={`flex justify-content-between align-items-center auto-complete-btn gap-1
@@ -118,12 +128,18 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
               {dialog && <div className="w-1"></div>}
             </div>
           )}
+          {isNoRecordBtn &&
+            item.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL && (
+              <div className="w-full text-center">
+                {t("components.button.message.noMoreRecordsToLoad")}
+              </div>
+            )}
         </div>
       );
     } else
       return (
         <>
-          {item.label === "Handle" ? (
+          {item.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL ? (
             <div className="flex justify-content-between">
               {dialog && (
                 <>
@@ -152,6 +168,11 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   };
 
   const findObjectById = (id: any) => {
+    if (
+      DEFAULT_LABEL_VALUE.HANDLE_VALUE === id ||
+      DEFAULT_LABEL_VALUE.NO_MORE_RECORD_VALUE === id
+    )
+      return null;
     return (options && options.find((item: any) => item.value === id)) || null;
   };
 
@@ -174,7 +195,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       default:
         labelClassName = "col-12 mb-3 md:col-3 md:mb-0";
         fieldClassName = "field grid custom-item-table";
-        divClassName = "col-12 md:col-9 relative";
+        divClassName = "col-12 md:col-9 relative flex";
         break;
     }
 
@@ -187,7 +208,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       {label} {required && "*"}
     </label>
   );
-
   return (
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
@@ -202,6 +222,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
           render={({ field }) => (
             <AutoComplete
               dropdown
+              dropdownMode={dropdownModeOption}
               id={attribute}
               {...field}
               field={attribute}
@@ -211,14 +232,25 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
               optionGroupLabel={optionGroupLabel}
               optionGroupChildren={optionGroupChildren}
               onChange={(e) => {
-                setSelected(e.value);
-                field.onChange(e.value ? e.value.value : null);
+                const isHandle =
+                  e.value?.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL;
+                const isNoMoreRecord =
+                  e.value?.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL;
+                if (isHandle || isNoMoreRecord) {
+                  setSelected(null);
+                  field.onChange(null);
+                } else {
+                  setSelected(e.value);
+                  field.onChange(e.value ? e.value.value : null);
+                }
               }}
               onSelect={(e) => field.onChange(e.value.value)}
               forceSelection={forceSelection}
               itemTemplate={itemTemplate}
               selectedItemTemplate={selectedItemTemplate}
-              placeholder={placeholder}
+              placeholder={
+                placeholder || t("components.multiSelect.placeholder")
+              }
               optionGroupTemplate={optionGroupTemplate}
               className={`w-full ${
                 errors && errors[attribute as string] ? "p-invalid" : ""
@@ -229,6 +261,13 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
           )}
         />
         <FormFieldError data={{ errors: errors, name: attribute as string }} />
+        {isLoadMore && handleOnLoad && (
+          <AppButton
+            type={BUTTON_TYPE.MORE_LOAD}
+            onClick={handleOnLoad}
+            className="ml-2"
+          />
+        )}
       </div>
     </div>
   );

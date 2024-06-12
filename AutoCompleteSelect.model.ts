@@ -41,4 +41,10 @@ export interface IAutoCompleteSelectCommon {
   filteredList?: (data: any) => void;
   appendTo?: "self" | HTMLElement | undefined | null;
   fieldType?: "top-label" | "no-label";
+  LoadMore?: {
+    handleOnLoad: (e: any) => void;
+    isLoadMore: boolean;
+    dropdownModeOption: "blank" | "current";
+    isNoRecordBtn: boolean;
+  };
 }
