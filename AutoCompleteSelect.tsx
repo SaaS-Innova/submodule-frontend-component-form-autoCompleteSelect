@@ -61,7 +61,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     control,
     formState: { errors },
   } = useFormContext();
-
+  const defaultPlaceHolder: string = t("components.multiSelect.placeholder");
   const filterOption = useRef<any>(
     _.debounce((options, query) => {
       setSuggestionsList(fuseFilter(options, query, searchMode));
@@ -250,9 +250,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
               forceSelection={forceSelection}
               itemTemplate={itemTemplate}
               selectedItemTemplate={selectedItemTemplate}
-              placeholder={
-                placeholder || t("components.multiSelect.placeholder")
-              }
+              placeholder={placeholder || defaultPlaceHolder}
               optionGroupTemplate={optionGroupTemplate}
               className={`w-full ${
                 errors && errors[attribute as string] ? "p-invalid" : ""
