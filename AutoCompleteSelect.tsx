@@ -265,7 +265,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
             <AppButton
               type={BUTTON_TYPE.MORE_LOAD}
               onClick={handleOnLoad}
-              className="ml-2"
+              className="ml-2 w-auto"
             />
           )}
         </div>
