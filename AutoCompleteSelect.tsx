@@ -43,6 +43,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     appendTo = "self",
     fieldType,
     LoadMore,
+    onChange,
   } = props || {};
   const {
     handleOnLoad,
@@ -210,6 +211,23 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       {label} {required && "*"}
     </label>
   );
+  const handleAutoCompleteSelectChange = (e: any, field: any) => {
+    const isHandle = e.value?.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL;
+    const isNoMoreRecord =
+      e.value?.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL;
+    if (isHandle || isNoMoreRecord) {
+      setSelected(null);
+      field.onChange(null);
+    } else {
+      if (onChange) {
+        onChange(e);
+        setSelected(e.value);
+      } else {
+        setSelected(e.value);
+        field.onChange(e.value ? e.value.value : null);
+      }
+    }
+  };
   return (
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
@@ -235,19 +253,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                 optionGroupLabel={optionGroupLabel}
                 optionGroupChildren={optionGroupChildren}
                 onChange={(e) => {
-                  const isHandle =
-                    e.value?.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL;
-                  const isNoMoreRecord =
-                    e.value?.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL;
-                  if (isHandle || isNoMoreRecord) {
-                    setSelected(null);
-                    field.onChange(null);
-                  } else {
-                    setSelected(e.value);
-                    field.onChange(e.value ? e.value.value : null);
-                  }
+                  handleAutoCompleteSelectChange(e, field);
                 }}
-                onSelect={(e) => field.onChange(e.value.value)}
+                onSelect={(e) => !onChange && field.onChange(e.value.value)}
                 forceSelection={forceSelection}
                 itemTemplate={itemTemplate}
                 selectedItemTemplate={selectedItemTemplate}
