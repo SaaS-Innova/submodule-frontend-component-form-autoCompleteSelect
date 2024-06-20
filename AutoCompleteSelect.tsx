@@ -176,7 +176,23 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       DEFAULT_LABEL_VALUE.NO_MORE_RECORD_VALUE === id
     )
       return null;
-    return (options && options.find((item: any) => item.value === id)) || null;
+    let selectOption: any;
+    options?.some((option: any) => {
+      if (option.items) {
+        return option.items.some((y: any) => {
+          if (y.value === id) {
+            selectOption = y;
+            return true;
+          }
+          return false;
+        });
+      } else if (option.value === id) {
+        selectOption = option;
+        return true;
+      }
+      return false;
+    });
+    return selectOption || null;
   };
 
   const getClassNames = () => {
