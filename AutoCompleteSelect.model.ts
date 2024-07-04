@@ -47,4 +47,8 @@ export interface IAutoCompleteSelectCommon {
     dropdownModeOption: "blank" | "current";
     isNoRecordBtn: boolean;
   };
+  prefixIcon?: {
+    icon: string;
+    handleClick: (e: any) => void;
+  };
 }

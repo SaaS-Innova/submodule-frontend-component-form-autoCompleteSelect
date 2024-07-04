@@ -93,7 +93,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
           {item.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL ? (
             <>
               <div
-                className={`flex justify-content-between align-items-center auto-complete-btn gap-1
+                className={`flex justify-content-between align-items-center auto-complete-btn ${
+                  column && column?.length >= 8 ? "gap-6" : "gap-1"
+                }
                 `}
               >
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
@@ -114,7 +116,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
             </>
           ) : (
             <div
-              className={`flex justify-content-between align-items-center gap-1`}
+              className={`flex justify-content-between align-items-center ${
+                column && column?.length >= 8 ? "gap-6" : "gap-1"
+              }`}
             >
               <>
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
@@ -248,7 +252,12 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
       <div className={divClassName}>
-        <div className="flex">
+        <div className="flex p-inputgroup">
+          {props.prefixIcon && icon && handleClick && (
+            <span className="p-inputgroup-addon bg-white cursor-pointer">
+              <i className={icon} onClick={handleClick}></i>
+            </span>
+          )}
           <Controller
             name={attribute as string}
             control={control}
