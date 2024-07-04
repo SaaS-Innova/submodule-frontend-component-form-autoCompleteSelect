@@ -55,6 +55,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     (form && form[attribute as string]) || {};
   const { required, disabled } =
     (form && form[attribute as string].rules) || {};
+  const { icon, handleClick } = props.prefixIcon || {};
   const [suggestionsList, setSuggestionsList] = useState<any>(null);
   const [query, setQuery] = useState<string>("");
   const [selected, setSelected] = useState<any>(null);
