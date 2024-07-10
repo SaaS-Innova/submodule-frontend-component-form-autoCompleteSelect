@@ -253,7 +253,11 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
       <div className={divClassName}>
-        <div className="flex p-inputgroup">
+        <div
+          className={`flex ${
+            props.prefixIcon && icon && handleClick ? "p-inputgroup" : ""
+          }`}
+        >
           {props.prefixIcon && icon && handleClick && (
             <span className="p-inputgroup-addon bg-white cursor-pointer">
               <i className={icon} onClick={handleClick}></i>
