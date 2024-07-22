@@ -1,5 +1,5 @@
 import { AutoComplete } from "primereact/autocomplete";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
   dateTemplate,
   inputValidator,
@@ -69,7 +69,15 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       setSuggestionsList(fuseFilter(options, query, searchMode));
     }, 300)
   );
-
+  const autoCompleteAttributeValue = useWatch({
+    control: control,
+    name: attribute as string,
+  });
+  useEffect(() => {
+    if (autoCompleteAttributeValue === null) {
+      setSelected(null);
+    }
+  }, [autoCompleteAttributeValue]);
   const searchList = (event: { query: string }) => {
     setQuery(event.query);
     filterOption.current(options, event.query);
