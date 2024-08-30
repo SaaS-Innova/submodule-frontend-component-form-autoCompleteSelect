@@ -44,6 +44,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     fieldType,
     LoadMore,
     onChange,
+    dropdown = true,
+    multiple = false,
   } = props || {};
   const {
     handleOnLoad,
@@ -280,7 +282,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
             )}
             render={({ field }) => (
               <AutoComplete
-                dropdown
+                dropdown={dropdown}
+                multiple={multiple}
                 dropdownMode={dropdownModeOption}
                 id={attribute}
                 {...field}

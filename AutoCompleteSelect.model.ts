@@ -51,4 +51,6 @@ export interface IAutoCompleteSelectCommon {
     icon: string;
     handleClick: (e: any) => void;
   };
+  dropdown?: boolean;
+  multiple?: boolean;
 }
