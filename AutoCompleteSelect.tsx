@@ -53,7 +53,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     isNoRecordBtn,
     dropdownModeOption = "blank",
   } = LoadMore || {};
-  const { label, options, placeholder } =
+  const { label, options, placeholder, extraLabelElementContent } =
     (form && form[attribute as string]) || {};
   const { required, disabled } =
     (form && form[attribute as string].rules) || {};
@@ -240,6 +240,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   const labelElement = (
     <label htmlFor={attribute} className={labelClassName}>
       {label} {required && "*"}
+      {extraLabelElementContent && extraLabelElementContent}
     </label>
   );
   const handleAutoCompleteSelectChange = (e: any, field: any) => {
