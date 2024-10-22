@@ -33,6 +33,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     optionGroupChildren,
     forceSelection,
     data,
+    formatDateField,
   } = (props && props.config) || {};
   const { t } = useTranslation();
   const {
@@ -135,7 +136,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
                   <div className="w-4" key={field.label}>
                     {finalData && _.get(finalData, field.value)
-                      ? field.label === "Created"
+                      ? field.label === "Created" ||
+                        (formatDateField?.length &&
+                          formatDateField.includes(field.label))
                         ? dateTemplate(_.get(finalData, field.value))
                         : _.get(finalData, field.value)
                       : ""}

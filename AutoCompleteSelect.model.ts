@@ -29,6 +29,7 @@ export interface IAutoCompleteSelectCommonConfig {
   dropdownMode?: string;
   forceSelection?: boolean;
   options?: IAutoCompleteSelectDropDownOption[];
+  formatDateField?: string[];
 }
 export interface IAutoCompleteSelectCommon {
   config?: IAutoCompleteSelectCommonConfig;
