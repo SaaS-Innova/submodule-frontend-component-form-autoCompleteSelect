@@ -4,6 +4,7 @@ import { IAttribute_Object } from "../formInterface/forms.model";
 export interface IAutoCompleteSelectTableColumn {
   label: string;
   value: string;
+  isValueShowInChip?: boolean;
 }
 
 export interface IAutoCompleteSelectDropDownOption {

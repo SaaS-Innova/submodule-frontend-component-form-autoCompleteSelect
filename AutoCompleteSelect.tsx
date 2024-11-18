@@ -1,27 +1,28 @@
-import { AutoComplete } from "primereact/autocomplete";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { AutoComplete } from 'primereact/autocomplete';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {
   dateTemplate,
   inputValidator,
-} from "../../../../library/utilities/helperFunction";
-import { useEffect, useRef, useState } from "react";
+} from '../../../../library/utilities/helperFunction';
+import { useEffect, useRef, useState } from 'react';
 import {
   AUTO_COMPLETE_SELECT_COMMON_TYPE,
   BUTTON_TYPE,
   DEFAULT_LABEL_VALUE,
   IFormFieldType,
   SEARCH_MODE,
-} from "../../../../library/utilities/constant";
+} from '../../../../library/utilities/constant';
 import {
   IAutoCompleteSelectCommon,
   IAutoCompleteSelectTableColumn,
-} from "./AutoCompleteSelect.model";
-import AppButton from "../../button/AppButton";
-import { fuseFilter } from "./AutoComplete.filter";
-import { IOptions } from "../formInterface/forms.model";
-import { FormFieldError } from "../formFieldError/FormFieldError";
-import { useTranslation } from "react-i18next";
-import _ from "lodash";
+} from './AutoCompleteSelect.model';
+import AppButton from '../../button/AppButton';
+import { fuseFilter } from './AutoComplete.filter';
+import { IOptions } from '../formInterface/forms.model';
+import { FormFieldError } from '../formFieldError/FormFieldError';
+import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
+import { Chip } from 'primereact/chip';
 
 export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   const {
@@ -41,7 +42,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     viewAs = AUTO_COMPLETE_SELECT_COMMON_TYPE.DROPDOWN,
     filteredList,
     searchMode = SEARCH_MODE.EXACT,
-    appendTo = "self",
+    appendTo = 'self',
     fieldType,
     LoadMore,
     onChange,
@@ -52,7 +53,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     handleOnLoad,
     isLoadMore,
     isNoRecordBtn,
-    dropdownModeOption = "blank",
+    dropdownModeOption = 'blank',
   } = LoadMore || {};
   const { label, options, placeholder, extraLabelElementContent } =
     (form && form[attribute as string]) || {};
@@ -60,17 +61,17 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     (form && form[attribute as string].rules) || {};
   const { icon, handleClick } = props.prefixIcon || {};
   const [suggestionsList, setSuggestionsList] = useState<any>(null);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>('');
   const [selected, setSelected] = useState<any>(null);
   const {
     control,
     formState: { errors },
   } = useFormContext();
-  const defaultPlaceHolder: string = t("components.multiSelect.placeholder");
+  const defaultPlaceHolder: string = t('components.multiSelect.placeholder');
   const filterOption = useRef<any>(
     _.debounce((options, query) => {
       setSuggestionsList(fuseFilter(options, query, searchMode));
-    }, 300)
+    }, 300),
   );
   const autoCompleteAttributeValue = useWatch({
     control: control,
@@ -87,7 +88,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   };
 
   useEffect(() => {
-    if (options && query === "") {
+    if (options && query === '') {
       setSuggestionsList(options);
     } else if (options) {
       searchList({ query: query });
@@ -106,7 +107,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
             <>
               <div
                 className={`flex justify-content-between align-items-center auto-complete-btn ${
-                  column && column?.length >= 8 ? "gap-6" : "gap-1"
+                  column && column?.length >= 8 ? 'gap-6' : 'gap-1'
                 }
                 `}
               >
@@ -129,19 +130,38 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
           ) : (
             <div
               className={`flex justify-content-between align-items-center ${
-                column && column?.length >= 8 ? "gap-6" : "gap-1"
+                column && column?.length >= 8 ? 'gap-6' : 'gap-1'
               }`}
             >
               <>
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
                   <div className="w-4" key={field.label}>
-                    {finalData && _.get(finalData, field.value)
-                      ? field.label === "Created" ||
-                        (formatDateField?.length &&
-                          formatDateField.includes(field.label))
-                        ? dateTemplate(_.get(finalData, field.value))
-                        : _.get(finalData, field.value)
-                      : ""}
+                    {finalData && _.get(finalData, field.value) ? (
+                      field.label === 'Created' ||
+                      (formatDateField?.length &&
+                        formatDateField.includes(field.label)) ? (
+                        dateTemplate(_.get(finalData, field.value))
+                      ) : field.isValueShowInChip ? (
+                        Array.isArray(_.get(finalData, field.value)) ? (
+                          _.get(finalData, field.value).map(
+                            (option: string, index: number) => (
+                              <div className="p-1" key={index}>
+                                <Chip className="pl-3 pr-3" label={option} />
+                              </div>
+                            ),
+                          )
+                        ) : (
+                          <Chip
+                            className="pl-3 pr-3"
+                            label={_.get(finalData, field.value)}
+                          />
+                        )
+                      ) : (
+                        _.get(finalData, field.value)
+                      )
+                    ) : (
+                      ''
+                    )}
                   </div>
                 ))}
               </>
@@ -151,7 +171,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
           {isNoRecordBtn &&
             item.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL && (
               <div className="w-full text-center">
-                {t("components.button.message.noMoreRecordsToLoad")}
+                {t('components.button.message.noMoreRecordsToLoad')}
               </div>
             )}
         </div>
@@ -214,25 +234,25 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   };
 
   const getClassNames = () => {
-    let labelClassName = "";
-    let fieldClassName = "";
-    let divClassName = "";
+    let labelClassName = '';
+    let fieldClassName = '';
+    let divClassName = '';
 
     switch (fieldType) {
       case IFormFieldType.NO_LABEL:
-        labelClassName = "";
-        fieldClassName = "field p-fluid custom-item-table";
-        divClassName = "";
+        labelClassName = '';
+        fieldClassName = 'field p-fluid custom-item-table';
+        divClassName = '';
         break;
       case IFormFieldType.TOP_LABEL:
-        labelClassName = "";
-        fieldClassName = "field p-fluid custom-item-table";
-        divClassName = "";
+        labelClassName = '';
+        fieldClassName = 'field p-fluid custom-item-table';
+        divClassName = '';
         break;
       default:
-        labelClassName = "col-12 mb-3 md:col-3 md:mb-0";
-        fieldClassName = "field grid custom-item-table";
-        divClassName = "col-12 md:col-9 relative";
+        labelClassName = 'col-12 mb-3 md:col-3 md:mb-0';
+        fieldClassName = 'field grid custom-item-table';
+        divClassName = 'col-12 md:col-9 relative';
         break;
     }
 
@@ -242,7 +262,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
 
   const labelElement = (
     <label htmlFor={attribute} className={labelClassName}>
-      {label} {required && "*"}
+      {label} {required && '*'}
       {extraLabelElementContent && extraLabelElementContent}
     </label>
   );
@@ -269,7 +289,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       <div className={divClassName}>
         <div
           className={`flex ${
-            props.prefixIcon && icon && handleClick ? "p-inputgroup" : ""
+            props.prefixIcon && icon && handleClick ? 'p-inputgroup' : ''
           }`}
         >
           {props.prefixIcon && icon && handleClick && (
@@ -282,7 +302,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
             control={control}
             rules={inputValidator(
               form?.[attribute as string]?.rules ?? {},
-              label as string
+              label as string,
             )}
             render={({ field }) => (
               <AutoComplete
@@ -307,7 +327,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                 placeholder={placeholder || defaultPlaceHolder}
                 optionGroupTemplate={optionGroupTemplate}
                 className={`w-full ${
-                  errors && errors[attribute as string] ? "p-invalid" : ""
+                  errors && errors[attribute as string] ? 'p-invalid' : ''
                 }`}
                 appendTo={appendTo}
                 disabled={disabled}
