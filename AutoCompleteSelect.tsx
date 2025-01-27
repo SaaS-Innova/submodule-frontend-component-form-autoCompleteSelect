@@ -109,11 +109,13 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                 className={`flex justify-content-between align-items-center auto-complete-btn ${
                   column && column?.length >= 8 ? "gap-6" : "gap-1"
                 }
-                `}>
+                `}
+              >
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
                   <div
                     className="w-4 font-bold white-space-normal"
-                    key={field.label}>
+                    key={field.label}
+                  >
                     {field.label}
                   </div>
                 ))}
@@ -132,7 +134,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
             <div
               className={`flex justify-content-between align-items-center ${
                 column && column?.length >= 8 ? "gap-6" : "gap-1"
-              }`}>
+              }`}
+            >
               <>
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
                   <div className="w-4 white-space-normal" key={field.label}>
@@ -187,7 +190,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                   <AppButton
                     type="Add"
                     onMouseDown={() => dialog && dialog(true)}
-                    className="custom_add_button"></AppButton>
+                    className="custom_add_button"
+                  ></AppButton>
                 </>
               )}
             </div>
@@ -261,7 +265,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
 
   const labelElement = (
     <label htmlFor={attribute} className={labelClassName}>
-      {label} {required && "*"}
+      <span className="capitalize-first">
+        {label} {required && "*"}
+      </span>
       {extraLabelElementContent && extraLabelElementContent}
     </label>
   );
@@ -289,7 +295,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         <div
           className={`flex ${
             props.prefixIcon && icon && handleClick ? "p-inputgroup" : ""
-          }`}>
+          }`}
+        >
           {props.prefixIcon && icon && handleClick && (
             <span className="p-inputgroup-addon bg-white cursor-pointer">
               <i className={icon} onClick={handleClick}></i>
