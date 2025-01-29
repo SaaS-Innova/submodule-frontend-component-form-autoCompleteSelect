@@ -113,7 +113,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
               >
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
                   <div
-                    className="w-4 font-bold white-space-normal"
+                    className="w-4 font-bold white-space-normal capitalize-first"
                     key={field.label}
                   >
                     {field.label}
