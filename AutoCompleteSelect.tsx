@@ -4,7 +4,7 @@ import {
   dateTemplate,
   inputValidator,
 } from "../../../../library/utilities/helperFunction";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
   AUTO_COMPLETE_SELECT_COMMON_TYPE,
   BUTTON_TYPE,
@@ -35,7 +35,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     forceSelection,
     data,
     formatDateField,
-  } = (props && props.config) || {};
+  } = props?.config || {};
   const { t } = useTranslation();
   const {
     dialog,
@@ -56,9 +56,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     dropdownModeOption = "blank",
   } = LoadMore || {};
   const { label, options, placeholder, extraLabelElementContent } =
-    (form && form[attribute as string]) || {};
-  const { required, disabled } =
-    (form && form[attribute as string].rules) || {};
+    form?.[attribute as string] || {};
+  const { required, disabled } = form?.[attribute as string]?.rules || {};
   const { icon, handleClick } = props.prefixIcon || {};
   const [suggestionsList, setSuggestionsList] = useState<any>(null);
   const [query, setQuery] = useState<string>("");
@@ -95,6 +94,38 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
+
+  const renderFieldValue = (
+    finalData: any,
+    field: IAutoCompleteSelectTableColumn,
+    formatDateField?: string[]
+  ): React.ReactNode => {
+    const value = _.get(finalData, field.value);
+
+    if (!value) return null;
+
+    const isDateField =
+      field.label === "Created" || formatDateField?.includes(field.label);
+    const isChipField = field.isValueShowInChip;
+
+    if (isDateField) {
+      return dateTemplate(value);
+    }
+
+    if (isChipField) {
+      return Array.isArray(value) ? (
+        value.map((option: string, index: number) => (
+          <div className="p-1" key={option}>
+            <Chip className="pl-3 pr-3" label={option} />
+          </div>
+        ))
+      ) : (
+        <Chip className="pl-3 pr-3" label={value} />
+      );
+    }
+
+    return value;
+  };
 
   const itemTemplate = (item: IOptions) => {
     if (viewAs === AUTO_COMPLETE_SELECT_COMMON_TYPE.TABLE) {
@@ -139,32 +170,9 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
               <>
                 {column?.map((field: IAutoCompleteSelectTableColumn) => (
                   <div className="w-4 white-space-normal" key={field.label}>
-                    {finalData && _.get(finalData, field.value) ? (
-                      field.label === "Created" ||
-                      (formatDateField?.length &&
-                        formatDateField.includes(field.label)) ? (
-                        dateTemplate(_.get(finalData, field.value))
-                      ) : field.isValueShowInChip ? (
-                        Array.isArray(_.get(finalData, field.value)) ? (
-                          _.get(finalData, field.value).map(
-                            (option: string, index: number) => (
-                              <div className="p-1" key={index}>
-                                <Chip className="pl-3 pr-3" label={option} />
-                              </div>
-                            )
-                          )
-                        ) : (
-                          <Chip
-                            className="pl-3 pr-3"
-                            label={_.get(finalData, field.value)}
-                          />
-                        )
-                      ) : (
-                        _.get(finalData, field.value)
-                      )
-                    ) : (
-                      ""
-                    )}
+                    {finalData && _.get(finalData, field.value)
+                      ? renderFieldValue(finalData, field, formatDateField)
+                      : ""}
                   </div>
                 ))}
               </>
@@ -236,32 +244,23 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     return selectOption || null;
   };
 
-  const getClassNames = () => {
-    let labelClassName = "";
-    let fieldClassName = "";
-    let divClassName = "";
-
+  const { labelClassName, fieldClassName, divClassName } = useMemo(() => {
     switch (fieldType) {
       case IFormFieldType.NO_LABEL:
-        labelClassName = "";
-        fieldClassName = "field p-fluid custom-item-table";
-        divClassName = "";
-        break;
       case IFormFieldType.TOP_LABEL:
-        labelClassName = "";
-        fieldClassName = "field p-fluid custom-item-table";
-        divClassName = "";
-        break;
+        return {
+          labelClassName: "",
+          fieldClassName: "field p-fluid custom-item-table",
+          divClassName: "",
+        };
       default:
-        labelClassName = "col-12 mb-3 md:col-3 md:mb-0";
-        fieldClassName = "field grid custom-item-table";
-        divClassName = "col-12 md:col-9 relative";
-        break;
+        return {
+          labelClassName: "col-12 mb-3 md:col-3 md:mb-0",
+          fieldClassName: "field grid custom-item-table",
+          divClassName: "col-12 md:col-9 relative",
+        };
     }
-
-    return { labelClassName, fieldClassName, divClassName };
-  };
-  const { labelClassName, fieldClassName, divClassName } = getClassNames();
+  }, [fieldType]);
 
   const labelElement = (
     <label htmlFor={attribute} className={labelClassName}>
