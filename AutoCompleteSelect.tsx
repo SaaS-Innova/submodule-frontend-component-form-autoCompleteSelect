@@ -114,7 +114,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
 
     if (isChipField) {
       return Array.isArray(value) ? (
-        value.map((option: string, index: number) => (
+        value.map((option: string) => (
           <div className="p-1" key={option}>
             <Chip className="pl-3 pr-3" label={option} />
           </div>
@@ -127,6 +127,53 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     return value;
   };
 
+  const renderHeader = () => {
+    return (
+      <div
+        className={`flex justify-content-between align-items-center auto-complete-btn ${
+          column && column.length >= 8 ? "gap-6" : "gap-1"
+        }`}
+      >
+        {column?.map((field: IAutoCompleteSelectTableColumn) => (
+          <div
+            className="w-4 font-bold white-space-normal capitalize-first"
+            key={field.label}
+          >
+            {field.label}
+          </div>
+        ))}
+        {dialog && (
+          <div className="w-1">
+            <AppButton
+              type="Add"
+              onMouseDown={() => dialog(true)}
+              className="custom_add_button"
+            />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderRow = (finalData: any) => {
+    return (
+      <div
+        className={`flex justify-content-between align-items-center ${
+          column && column.length >= 8 ? "gap-6" : "gap-1"
+        }`}
+      >
+        {column?.map((field: IAutoCompleteSelectTableColumn) => (
+          <div className="w-4 white-space-normal" key={field.label}>
+            {finalData && _.get(finalData, field.value)
+              ? renderFieldValue(finalData, field, formatDateField)
+              : ""}
+          </div>
+        ))}
+        {dialog && <div className="w-1"></div>}
+      </div>
+    );
+  };
+
   const itemTemplate = (item: IOptions) => {
     if (viewAs === AUTO_COMPLETE_SELECT_COMMON_TYPE.TABLE) {
       const finalData = Array.isArray(data)
@@ -134,51 +181,10 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         : null;
       return (
         <div>
-          {item.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL ? (
-            <>
-              <div
-                className={`flex justify-content-between align-items-center auto-complete-btn ${
-                  column && column?.length >= 8 ? "gap-6" : "gap-1"
-                }
-                `}
-              >
-                {column?.map((field: IAutoCompleteSelectTableColumn) => (
-                  <div
-                    className="w-4 font-bold white-space-normal capitalize-first"
-                    key={field.label}
-                  >
-                    {field.label}
-                  </div>
-                ))}
-                {dialog && (
-                  <div className="w-1">
-                    <AppButton
-                      type="Add"
-                      onMouseDown={() => dialog(true)}
-                      className="custom_add_button"
-                    />
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <div
-              className={`flex justify-content-between align-items-center ${
-                column && column?.length >= 8 ? "gap-6" : "gap-1"
-              }`}
-            >
-              <>
-                {column?.map((field: IAutoCompleteSelectTableColumn) => (
-                  <div className="w-4 white-space-normal" key={field.label}>
-                    {finalData && _.get(finalData, field.value)
-                      ? renderFieldValue(finalData, field, formatDateField)
-                      : ""}
-                  </div>
-                ))}
-              </>
-              {dialog && <div className="w-1"></div>}
-            </div>
-          )}
+          {item.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL
+            ? renderHeader()
+            : renderRow(finalData)}
+
           {isNoRecordBtn &&
             item.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL && (
               <div className="w-full text-center">
