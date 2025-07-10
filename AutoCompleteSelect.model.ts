@@ -5,6 +5,7 @@ export interface IAutoCompleteSelectTableColumn {
   label: string;
   value: string;
   isValueShowInChip?: boolean;
+  width?: string;
 }
 
 export interface IAutoCompleteSelectDropDownOption {
