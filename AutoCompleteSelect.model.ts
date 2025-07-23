@@ -56,4 +56,5 @@ export interface IAutoCompleteSelectCommon {
   };
   dropdown?: boolean;
   multiple?: boolean;
+  isLoading?: boolean;
 }
