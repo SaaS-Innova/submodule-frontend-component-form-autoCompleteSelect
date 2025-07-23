@@ -23,7 +23,6 @@ import { FormFieldError } from "../formFieldError/FormFieldError";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { Chip } from "primereact/chip";
-
 export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
   const {
     attribute,
@@ -48,6 +47,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     onChange,
     dropdown = true,
     multiple = false,
+    isLoading,
   } = props || {};
   const {
     handleOnLoad,
@@ -76,18 +76,15 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     control: control,
     name: attribute as string,
   });
-
   useEffect(() => {
     if (autoCompleteAttributeValue === null) {
       setSelected(null);
     }
   }, [autoCompleteAttributeValue]);
-
   const searchList = (event: { query: string }) => {
     setQuery(event.query);
     filterOption.current(options, event.query);
   };
-
   useEffect(() => {
     if (options && query === "") {
       setSuggestionsList(options);
@@ -96,24 +93,19 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options]);
-
   const renderFieldValue = (
     finalData: any,
     field: IAutoCompleteSelectTableColumn,
     formatDateField?: string[]
   ): React.ReactNode => {
     const value = _.get(finalData, field.value);
-
     if (!value) return null;
-
     const isDateField =
       field.label === "Created" || formatDateField?.includes(field.label);
     const isChipField = field.isValueShowInChip;
-
     if (isDateField) {
       return dateTemplate(value);
     }
-
     if (isChipField) {
       return Array.isArray(value) ? (
         value.map((option: string) => (
@@ -125,10 +117,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         <Chip className="pl-3 pr-3" label={value} />
       );
     }
-
     return value;
   };
-
   const renderHeader = () => {
     return (
       <div
@@ -156,7 +146,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       </div>
     );
   };
-
   const renderRow = (finalData: any) => {
     return (
       <div
@@ -176,7 +165,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       </div>
     );
   };
-
   const itemTemplate = (item: IOptions) => {
     if (viewAs === AUTO_COMPLETE_SELECT_COMMON_TYPE.TABLE) {
       const finalData = Array.isArray(data)
@@ -187,7 +175,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
           {item.label === DEFAULT_LABEL_VALUE.HANDLE_LABEL
             ? renderHeader()
             : renderRow(finalData)}
-
           {isNoRecordBtn &&
             item.label === DEFAULT_LABEL_VALUE.NO_MORE_RECORD_LABEL && (
               <div className="w-full text-center">
@@ -217,7 +204,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         </>
       );
   };
-
   const selectedItemTemplate = (item: IOptions) => {
     if (item.extra_label) {
       return `${item.extra_label} -${item.label}`;
@@ -225,7 +211,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       return `${item.label}`;
     }
   };
-
   const findObjectById = (id: any) => {
     if (
       !id ||
@@ -251,7 +236,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     });
     return selectOption || null;
   };
-
   const { labelClassName, fieldClassName, divClassName } = useMemo(() => {
     switch (fieldType) {
       case IFormFieldType.NO_LABEL:
@@ -269,7 +253,6 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         };
     }
   }, [fieldType]);
-
   const labelElement = (
     <label htmlFor={attribute} className={labelClassName}>
       <span className="capitalize-first">
@@ -339,7 +322,10 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                   errors && errors[attribute as string] ? "p-invalid" : ""
                 }`}
                 appendTo={appendTo}
-                disabled={disabled}
+                disabled={disabled || isLoading}
+                dropdownIcon={
+                  isLoading ? "pi pi-spinner pi-spin" : "pi pi-chevron-down"
+                }
               />
             )}
           />
