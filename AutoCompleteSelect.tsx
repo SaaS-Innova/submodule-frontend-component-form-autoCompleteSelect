@@ -124,13 +124,15 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       <div
         className={`flex justify-content-between align-items-center auto-complete-btn ${
           column && column.length >= 8 ? "gap-6" : "gap-1"
-        }`}>
+        }`}
+      >
         {column?.map((field: IAutoCompleteSelectTableColumn) => (
           <div
             className={`${
               field?.width ?? "w-4"
             }  font-bold white-space-normal capitalize-first `}
-            key={field.label}>
+            key={field.label}
+          >
             {field.label}
           </div>
         ))}
@@ -151,11 +153,13 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
       <div
         className={`flex justify-content-between align-items-center ${
           column && column.length >= 8 ? "gap-6" : "gap-1"
-        }`}>
+        }`}
+      >
         {column?.map((field: IAutoCompleteSelectTableColumn) => (
           <div
             className={`${field?.width ?? "w-4"} white-space-normal`}
-            key={field.label}>
+            key={field.label}
+          >
             {finalData && _.get(finalData, field.value)
               ? renderFieldValue(finalData, field, formatDateField)
               : ""}
@@ -194,7 +198,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                   <AppButton
                     type="Add"
                     onMouseDown={() => dialog && dialog(true)}
-                    className="custom_add_button"></AppButton>
+                    className="custom_add_button"
+                  ></AppButton>
                 </>
               )}
             </div>
@@ -285,7 +290,8 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
         <div
           className={`flex ${
             props.prefixIcon && icon && handleClick ? "p-inputgroup" : ""
-          }`}>
+          }`}
+        >
           {props.prefixIcon && icon && handleClick && (
             <span className="p-inputgroup-addon bg-white cursor-pointer">
               <i className={icon} onClick={handleClick}></i>
@@ -306,7 +312,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                 id={attribute}
                 field={attribute}
                 suggestions={suggestionsList}
-                value={selected || findObjectById(field.value)}
+                value={(selected || findObjectById(field.value))?.label ?? null}
                 completeMethod={filteredList || searchList}
                 optionGroupLabel={optionGroupLabel}
                 optionGroupChildren={optionGroupChildren}
