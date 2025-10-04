@@ -312,7 +312,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                 id={attribute}
                 field={attribute}
                 suggestions={suggestionsList}
-                value={(selected || findObjectById(field.value))?.label ?? null}
+                value={selected || findObjectById(field.value)}
                 completeMethod={filteredList || searchList}
                 optionGroupLabel={optionGroupLabel}
                 optionGroupChildren={optionGroupChildren}
