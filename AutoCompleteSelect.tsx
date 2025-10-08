@@ -34,6 +34,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
     forceSelection,
     data,
     formatDateField,
+    customItemTemplate,
   } = props?.config || {};
   const { t } = useTranslation();
   const {
@@ -320,7 +321,7 @@ export const AutoCompleteSelect = (props: IAutoCompleteSelectCommon) => {
                   handleAutoCompleteSelectChange(e, field);
                 }}
                 forceSelection={forceSelection}
-                itemTemplate={itemTemplate}
+                itemTemplate={customItemTemplate ?? itemTemplate}
                 selectedItemTemplate={selectedItemTemplate}
                 placeholder={placeholder || defaultPlaceHolder}
                 optionGroupTemplate={optionGroupTemplate}

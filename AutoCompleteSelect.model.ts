@@ -1,5 +1,5 @@
 import { AUTO_COMPLETE_SELECT_COMMON_TYPE } from "../../../../library/utilities/constant";
-import { IAttribute_Object } from "../formInterface/forms.model";
+import { IAttribute_Object, IOptions } from "../formInterface/forms.model";
 
 export interface IAutoCompleteSelectTableColumn {
   label: string;
@@ -32,6 +32,7 @@ export interface IAutoCompleteSelectCommonConfig {
   forceSelection?: boolean;
   options?: IAutoCompleteSelectDropDownOption[];
   formatDateField?: string[];
+  customTemplate?: (data: IOptions) => JSX.Element;
 }
 export interface IAutoCompleteSelectCommon {
   config?: IAutoCompleteSelectCommonConfig;
