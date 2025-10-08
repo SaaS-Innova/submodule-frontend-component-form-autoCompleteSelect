@@ -32,7 +32,7 @@ export interface IAutoCompleteSelectCommonConfig {
   forceSelection?: boolean;
   options?: IAutoCompleteSelectDropDownOption[];
   formatDateField?: string[];
-  customTemplate?: (data: IOptions) => JSX.Element;
+  customItemTemplate?: (data: IOptions) => JSX.Element;
 }
 export interface IAutoCompleteSelectCommon {
   config?: IAutoCompleteSelectCommonConfig;
